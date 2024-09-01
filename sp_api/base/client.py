@@ -70,6 +70,8 @@ class Client(BaseClient):
         self.timeout = timeout
         self.version = version
         self.verify = verify
+        self.res = None
+
         show_donation_message()
 
     @property
@@ -115,6 +117,8 @@ class Client(BaseClient):
                       timeout=self.timeout,
                       proxies=self.proxies,
                       verify=self.verify)
+        self.res = res
+        
         return self._check_response(res, res_no_data, bulk, wrap_list)
 
     def _check_response(self, res, res_no_data: bool = False, bulk: bool = False,
