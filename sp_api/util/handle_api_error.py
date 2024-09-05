@@ -1,7 +1,7 @@
 from typing import Callable, Tuple
 from loguru import logger
 from sp_api.base import Marketplaces, Client
-from sp_api.util import exponential_backoff_with_jitter
+from sp_api.util.backoff import exponential_backoff_with_jitter
 
 
 def handle_api_error(

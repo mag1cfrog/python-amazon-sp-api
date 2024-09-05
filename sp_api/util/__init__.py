@@ -9,5 +9,7 @@ __all__ = [
     'throttle_retry',
     'load_all_pages',
     'KeyMaker',
-    'load_date_bound'
+    'load_date_bound',
+    "backoff",
+    "handle_api_error",
 ]

@@ -8,7 +8,8 @@ setup(
     install_requires=[
         "requests",
         "cachetools>=4.2",
-        "confuse>=1.4"
+        "confuse>=1.4",
+        "loguru"
     ],
     extras_require={
         "aws-caching": ["aws-secretsmanager-caching", "boto3"],
