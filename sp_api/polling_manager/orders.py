@@ -1,5 +1,5 @@
-from loguru import logger
-from sp_api.util.backoff import exponential_backoff_with_jitter
+
+from sp_api.util.handle_api_error import handle_api_error
 from sp_api.base import Marketplaces
 from sp_api.api import Orders
 
@@ -32,32 +32,20 @@ def fetch_all_orders(credentials: dict, marketplace: Marketplaces=Marketplaces.U
         # Handle exceptions
         except Exception as e:
 
-            # Handle rate limiting
-            if orders_client.res.status_code == 429:  
-                if attempt < max_attempts:
-                    exponential_backoff_with_jitter(base_sleep_time, attempt, backoff_base)
-                    attempt += 1
-                    continue
-                else:
-                    logger.error("API request rate exceeded after several retries")
-                    should_continue = False
-            
-            # Handle client expiration
-            if orders_client.res.status_code == 403 and "expired" in str(e).lower():
-                    if client_refresh < max_client_refreshes:
-                        logger.info("Refreshing client...")
-                        orders_client = refresh_client(credentials, marketplace)
-                        client_refresh += 1
-                        logger.info("Client refreshed, retrying...")
-                        continue
-                    else:
-                        logger.info("Client refresh limit exceeded")
-                        should_continue = False
-                        logger.error("Client refresh limit exceeded, stopping polling...")
-
-            else:
-                # If unexpected error occurs, raise it immediately
-                raise Exception("An error occurred:", e)
+            # Handle API errors
+            should_continue, client_refresh, orders_client = handle_api_error(
+                e=e,
+                api_client=orders_client,
+                attempt=attempt,
+                max_attempts=max_attempts,
+                base_sleep_time=base_sleep_time,
+                backoff_base=backoff_base,
+                client_refresh=client_refresh,
+                max_client_refreshes=max_client_refreshes,
+                credentials=credentials,
+                marketplace=marketplace,
+                refresh_client=refresh_client
+            )
 
 
     return all_orders
