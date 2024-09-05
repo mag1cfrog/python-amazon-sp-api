@@ -210,7 +210,7 @@ def fetch_all_order_items(orders:list, credentials: dict, marketplace: Marketpla
 
     Args:
 
-        orders (list): A list of AmazonOrderIds.
+        orders (list): A list of dictionary that contains AmazonOrderIds.
         credentials (dict): The credentials to use for the API client.
         marketplace (Marketplaces): The marketplace to fetch orders from.
         **kwargs: Additional keyword arguments to pass to the API client.
@@ -240,13 +240,13 @@ def fetch_all_order_items(orders:list, credentials: dict, marketplace: Marketpla
     )
 
 
-def fetch_all_order_addresses(orders:list, credentials: dict, marketplace: Marketplaces=Marketplaces.US, **kwargs) -> list:
+def fetch_all_order_addresses(orders:dict, credentials: dict, marketplace: Marketplaces=Marketplaces.US, **kwargs) -> list:
     """
     Fetch all order addresses from the API based on a given list of AmazonOrderIds.
 
     Args:
     
-            orders (list): A list of AmazonOrderIds.
+            orders (list): A list of dictionary that contains AmazonOrderIds.
             credentials (dict): The credentials to use for the API client.
             marketplace (Marketplaces): The marketplace to fetch orders from.
             **kwargs: Additional keyword arguments to pass to the API client.
