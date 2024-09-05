@@ -184,7 +184,6 @@ def fetch_all_order_attributes(
     return all_order_attributes
 
 
-
 def fetch_one_order_address(order_id: str, order_client: Orders, next_token: str) -> ApiResponse:
     """
     Fetch one order address from the API.
@@ -203,3 +202,77 @@ def fetch_one_order_items(order_id: str, order_client: Orders, next_token: str) 
         order_id=order_id,
         NextToken=next_token
     )
+
+
+def fetch_all_order_items(orders:list, credentials: dict, marketplace: Marketplaces=Marketplaces.US, **kwargs) -> list:
+    """
+    Fetch all order items from the API based on a given list of AmazonOrderIds.
+
+    Args:
+
+        orders (list): A list of AmazonOrderIds.
+        credentials (dict): The credentials to use for the API client.
+        marketplace (Marketplaces): The marketplace to fetch orders from.
+        **kwargs: Additional keyword arguments to pass to the API client.
+
+    Returns:
+        list: A list of order items.
+
+    Raises:
+        Exception: An unexpected error occurred.
+
+    Examples:
+
+        fetch_all_order_items(
+            orders=orders,
+            credentials=credentials,
+            marketplace=Marketplaces.US
+        )
+
+    """
+    return fetch_all_order_attributes(
+        orders=orders,
+        credentials=credentials,
+        fetch_attribute_func=fetch_one_order_items,
+        refresh_client=refresh_client,
+        marketplace=marketplace,
+        **kwargs
+    )
+
+
+def fetch_all_order_addresses(orders:list, credentials: dict, marketplace: Marketplaces=Marketplaces.US, **kwargs) -> list:
+    """
+    Fetch all order addresses from the API based on a given list of AmazonOrderIds.
+
+    Args:
+    
+            orders (list): A list of AmazonOrderIds.
+            credentials (dict): The credentials to use for the API client.
+            marketplace (Marketplaces): The marketplace to fetch orders from.
+            **kwargs: Additional keyword arguments to pass to the API client.
+
+    Returns:
+        list: A list of order addresses.
+
+    Raises:
+        Exception: An unexpected error occurred.
+    
+    Examples:
+    
+            fetch_all_order_addresses(
+                orders=orders,
+                credentials=credentials,
+                marketplace=Marketplaces.US
+            )
+    
+        """    
+    
+    return fetch_all_order_attributes(
+        orders=orders,
+        credentials=credentials,
+        fetch_attribute_func=fetch_one_order_address,
+        refresh_client=refresh_client,
+        marketplace=marketplace,
+        **kwargs
+    )
+
