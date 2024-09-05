@@ -194,3 +194,12 @@ def fetch_one_order_address(order_id: str, order_client: Orders, next_token: str
         NextToken=next_token
     )
 
+
+def fetch_one_order_items(order_id: str, order_client: Orders, next_token: str) -> ApiResponse:
+    """
+    Fetch one order items from the API.
+    """
+    return order_client.get_order_items(
+        order_id=order_id,
+        NextToken=next_token
+    )
