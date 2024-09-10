@@ -1,4 +1,4 @@
-[![Downloads](https://static.pepy.tech/badge/python-amazon-sp-api)](https://pepy.tech/project/python-amazon-sp-api)
+****[![Downloads](https://static.pepy.tech/badge/python-amazon-sp-api)](https://pepy.tech/project/python-amazon-sp-api)
 [![Downloads](https://static.pepy.tech/badge/python-amazon-sp-api/month)](https://pepy.tech/project/python-amazon-sp-api)
 [![Downloads](https://static.pepy.tech/badge/python-amazon-sp-api/week)](https://pepy.tech/project/python-amazon-sp-api)
 
@@ -138,5 +138,61 @@ The client is pretty extensible and can be used for any other API. Check it out 
 
 [API Client](https://github.com/saleweaver/rapid_rest_client)
 
+---
+
+### Polling Manager
+
+We have introduced a new module called `polling_manager` to handle pagination and backoff strategies automatically. This makes it easier to fetch all records without worrying about pagination limits or implementing exponential backoff.
+
+#### Vanilla Method
+
+Previously, to get orders, you would use the `Orders` module like this:
+
+```python
+from sp_api.api import Orders
+
+orders_client = Orders(
+    credentials=credentials,
+    marketplace=Marketplaces.US
+)
 
 
+orders = orders_client.get_orders(
+        CreatedAfter=one_week_ago
+)
+```
+
+This method does not handle pagination and backoff, so if you have more than 100 records, you won't be able to get all your records.
+
+#### Using Polling Manager
+
+With the new polling_manager module, you can fetch all orders easily:
+
+```python
+from sp_api.polling_manager import PollingManager
+
+pm = PollingManager(
+    marketplace=Marketplaces.US,
+    credentials=credentials,
+)
+
+orders = pm.orders.fetch_all_orders(
+    CreatedAfter=one_week_ago
+)
+```
+
+The polling_manager automatically handles pagination and backoff strategy for you, ensuring that the final result is complete even if you have more than 100 records. You don't have to worry about implementing exponential backoff.
+
+The parameters are the same as the vanilla method, so you can use the same parameters to filter your results.
+
+---
+
+For now, the `polling_manager` module is only available for the `Orders` module. We will be adding support for other modules soon.
+
+Supported methods:
+    
+```python
+polling_manager.orders.fetch_all_orders()
+polling_manager.orders.fetch_all_order_items()
+polling_manager.orders.fetch_all_order_addresses()
+```
